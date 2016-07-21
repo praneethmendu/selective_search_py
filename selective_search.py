@@ -7,7 +7,7 @@ import copy
 import joblib
 import numpy
 import scipy.sparse
-import segment
+from build.segment import segment_label
 import collections
 import skimage.io
 import features
@@ -62,7 +62,7 @@ def _merge_similarity_set(feature_extractor, Ak, S, i, j, t):
     return sorted(S + St)
 
 def hierarchical_segmentation(I, k = 100, feature_mask = features.SimilarityMask(1, 1, 1, 1)):
-    F0, n_region = segment.segment_label(I, 0.8, k, 100)
+    F0, n_region = segment_label(I, 0.8, k, 100)
     adj_mat, A0 = _calc_adjacency_matrix(F0, n_region)
     feature_extractor = features.Features(I, F0, n_region)
 
