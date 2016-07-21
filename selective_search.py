@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import datetime
 import itertools
 import copy
@@ -12,6 +9,7 @@ import collections
 import skimage.io
 import features
 import color_space
+
 
 def _calc_adjacency_matrix(label_img, n_region):
     r = numpy.vstack([label_img[:, :-1].ravel(), label_img[:, 1:].ravel()])
@@ -28,6 +26,7 @@ def _calc_adjacency_matrix(label_img, n_region):
     Adjacency = collections.namedtuple('Adjacency', ['matrix', 'dictionary'])
     return Adjacency(matrix = A, dictionary = dic)
 
+
 def _new_adjacency_dict(A, i, j, t):
     Ak = copy.deepcopy(A)
     Ak[t] = (Ak[i] | Ak[j]) - {i, j}
@@ -39,10 +38,12 @@ def _new_adjacency_dict(A, i, j, t):
 
     return Ak
 
+
 def _new_label_image(F, i, j, t):
     Fk = numpy.copy(F)
     Fk[Fk == i] = Fk[Fk == j] = t
     return Fk
+
 
 def _build_initial_similarity_set(A0, feature_extractor):
     S = list()
@@ -50,6 +51,7 @@ def _build_initial_similarity_set(A0, feature_extractor):
         S += [(feature_extractor.similarity(i, j), (i, j)) for j in J if i < j]
 
     return sorted(S)
+
 
 def _merge_similarity_set(feature_extractor, Ak, S, i, j, t):
     # remove entries which have i or j
@@ -60,6 +62,7 @@ def _merge_similarity_set(feature_extractor, Ak, S, i, j, t):
          [(feature_extractor.similarity(x, t), (x, t)) for x in Ak[t] if x < t]
 
     return sorted(S + St)
+
 
 def hierarchical_segmentation(I, k = 100, feature_mask = features.SimilarityMask(1, 1, 1, 1)):
     F0, n_region = segment_label(I, 0.8, k, 100)
@@ -95,6 +98,7 @@ def hierarchical_segmentation(I, k = 100, feature_mask = features.SimilarityMask
 
     return (R, F, L)
 
+
 def _generate_regions(R, L):
     n_ini = sum(not parent for parent in R.values())
     n_all = len(R)
@@ -107,16 +111,17 @@ def _generate_regions(R, L):
 
     return sorted(regions)
 
+
 def _selective_search_one(I, color, k, mask):
     I_color = color_space.convert_color(I, color)
     (R, F, L) = hierarchical_segmentation(I_color, k, mask)
     return _generate_regions(R, L)
 
-def selective_search(I, color_spaces = ['rgb'], ks = [100], feature_masks = [features.SimilarityMask(1, 1, 1, 1)], n_jobs = -1):
-    parameters = itertools.product(color_spaces, ks, feature_masks)
-    region_set = joblib.Parallel(n_jobs = n_jobs)(joblib.delayed(_selective_search_one)(I, color, k, mask) for (color, k, mask) in parameters)
 
-    #flatten list of list of tuple to list of tuple
+def selective_search(I, color_spaces=['rgb'], ks=[100], feature_masks=[features.SimilarityMask(1, 1, 1, 1)], n_jobs=-1):
+    parameters = itertools.product(color_spaces, ks, feature_masks)
+    region_set = joblib.Parallel(n_jobs=n_jobs)(joblib.delayed(_selective_search_one)(I, color, k, mask) for (color, k, mask) in parameters)
+
+    # flatten list of list of tuple to list of tuple
     regions = sum(region_set, [])
     return sorted(regions)
-

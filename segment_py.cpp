@@ -12,6 +12,7 @@ static int operator<(const rgb& x, const rgb& y)
 static void check_image_format(const boost::numpy::ndarray& input_image)
 {
     const int nd = input_image.get_nd();
+
     if(nd != 3)
         throw std::runtime_error("input_image must be 3-dimensional");
 
