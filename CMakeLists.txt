@@ -9,7 +9,7 @@ if(PYTHONLIBS_FOUND)
     include_directories(${PYTHON_INCLUDE_DIRS})
 endif()
 
-find_package(Boost 1.58 COMPONENTS "python3" "numpy" REQUIRED)
+find_package(Boost 1.58 COMPONENTS python3 numpy REQUIRED)
 if(Boost_FOUND)
     include_directories(${CMAKE_SOURCE_DIR}/segment ${CMAKE_CURRENT_SOURCE_DIR} ${Boost_INCLUDE_DIRS})
 
