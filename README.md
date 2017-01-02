@@ -38,7 +38,6 @@ It works as a python module, so build it first.
 ```sh
 % git clone https://github.com/belltailjp/selective_search_py.git
 % cd selective_search_py
-% wget http://cs.brown.edu/~pff/segment/segment.zip; unzip segment.zip; rm segment.zip
 % cmake .
 % make
 ```
