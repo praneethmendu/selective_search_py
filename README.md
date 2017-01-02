@@ -3,7 +3,7 @@ boost.numpy is now a part of boost.python so this causes issues like:
 fatal error: boost/numpy.hpp: No such file or directory
 
 this was solved by editing segment_py.cpp :
-- #include <boost/numpy.hpp> replaced by #include <boost/python/numpy.hpp>
+- "#include source boost/numpy.hpp replaced by boost/python/numpy.hpp
 - all namespaces boost::numpy… replaced by boost::python::numpy
 
 also I forked Austrikers as it is more active than the master branch: belltailjp/selective_search_py
