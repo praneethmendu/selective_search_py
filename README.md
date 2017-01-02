@@ -1,3 +1,14 @@
+# Reason for fork
+boost.numpy is now a part of boost.python so this causes issues like:
+fatal error: boost/numpy.hpp: No such file or directory
+
+this was solved by editing segment_py.cpp :
+- #include <boost/numpy.hpp> replaced by #include <boost/python/numpy.hpp>
+- all namespaces boost::numpy… replaced by boost::python::numpy
+
+also I forked Austrikers as it is more active than the master branch: belltailjp/selective_search_py
+
+
 # Overview
 
 This is a python implementation of the Selective Search [[1]](#selective_search_ijcv)[[2]](#selective_search_iccv).
